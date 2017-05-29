@@ -1,23 +1,6 @@
 var React = require("react");
 var ReactDom = require("react-dom");
 
-// [
-//   {
-//     "username": "diomed",
-//     "img": "https://avatars3.githubusercontent.com/u/72777?v=3",
-//     "alltime": 4339,
-//     "recent": 529,
-//     "lastUpdate": "2017-05-28T17:18:21.890Z"
-//   },
-//   {
-//     "username": "sjames1958gm",
-//     "img": "https://avatars.githubusercontent.com/u/4639625?v=3",
-//     "alltime": 7186,
-//     "recent": 516,
-//     "lastUpdate": "2017-05-28T17:18:02.664Z"
-//   },
-// ]
-
 class LeaderboardContainer extends React.Component {
   constructor(props) {
     super(props);    
@@ -77,25 +60,56 @@ class LeaderboardContainer extends React.Component {
   }
 }
 
+const sortStyle = {
+    sort: {
+        cursor: "pointer",
+        color: "blue",
+        textDecoration: "underline"
+    },
+    sortHover: {
+        textDecoration: "none",
+        textShadow: "1px 1px 1px #555"
+    }
+};
+
 function Leaderboard(props) {
     const leaderElements = [];
+    let rank = 0;
     props.leaders.forEach(l => {
+        rank++
         leaderElements.push(
-            <Leader key={l.username} data={l}/>
+            <Leader rank={rank} key={rank} data={l}/>
         )
     });
-    return (
-        <div>
-            {leaderElements}
-        </div>
+    return (        
+        <table className="pure-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>User</th>
+                    <th>
+                        <span style={sortStyle.sort}>Recent</span>
+                    </th>
+                    <th>
+                        <span style={sortStyle.sort}>Alltime</span>                        
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {leaderElements}
+            </tbody>
+        </table>
     )
 }
 
 function Leader(props) {
-    return (
-        <div>
-            {props.data.username}
-        </div>
+    return (        
+        <tr>
+            <td>{props.rank}</td>
+            <td>{props.data.username}</td>
+            <td>{props.data.recent}</td>
+            <td>{props.data.alltime}</td>
+        </tr>
     )
 }
 
