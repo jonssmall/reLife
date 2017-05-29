@@ -79,32 +79,39 @@ function Leaderboard(props) {
             <Leader rank={rank} key={rank} data={l}/>
         )
     });
-    return (        
-        <table className="pure-table">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>User</th>
-                    <th>
-                        <span onClick={props.recentHandler} style={sortStyle.sort}>Recent</span>
-                    </th>
-                    <th>
-                        <span onClick={props.alltimeHandler} style={sortStyle.sort}>Alltime</span>                        
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                {leaderElements}
-            </tbody>
-        </table>
+    return (       
+        <div className="pure-g">
+            <div className="pure-u-1-3"></div>
+            <div className="pure-u-1-3">
+                <h1>freeCodeCamp Leaderboard</h1>
+                <table className="pure-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>User</th>
+                            <th>
+                                <span onClick={props.recentHandler} style={sortStyle.sort}>Recent</span>
+                            </th>
+                            <th>
+                                <span onClick={props.alltimeHandler} style={sortStyle.sort}>Alltime</span>                        
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {leaderElements}
+                    </tbody>
+                </table>
+            </div>
+            <div className="pure-u-1-3"></div>
+        </div>         
     )
 }
 
 function Leader(props) {
     return (        
-        <tr>
+        <tr className={props.rank % 2 == 0 ? "pure-table-odd": ""}>
             <td>{props.rank}</td>
-            <td>{props.data.username}</td>
+            <td><a target="_blank" href={`https://www.freecodecamp.com/${props.data.username}`}>{props.data.username}</a></td>
             <td>{props.data.recent}</td>
             <td>{props.data.alltime}</td>
         </tr>
