@@ -51,10 +51,8 @@ class LeaderboardContainer extends React.Component {
         )
     }
     return (
-        <div>
-            <button onClick={this.handleSortAlltime}>Sort Alltime</button>
-            <button onClick={this.handleSortRecent}>Sort Recent</button>
-            <Leaderboard leaders={this.state.leaders}/>
+        <div>            
+            <Leaderboard recentHandler={this.handleSortRecent} alltimeHandler={this.handleSortAlltime} leaders={this.state.leaders}/>
         </div>        
     );
   }
@@ -88,10 +86,10 @@ function Leaderboard(props) {
                     <th>#</th>
                     <th>User</th>
                     <th>
-                        <span style={sortStyle.sort}>Recent</span>
+                        <span onClick={props.recentHandler} style={sortStyle.sort}>Recent</span>
                     </th>
                     <th>
-                        <span style={sortStyle.sort}>Alltime</span>                        
+                        <span onClick={props.alltimeHandler} style={sortStyle.sort}>Alltime</span>                        
                     </th>
                 </tr>
             </thead>
