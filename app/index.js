@@ -35,29 +35,31 @@ class LeaderboardContainer extends React.Component {
     });
   }
 
-  handleSortRecent() {
-      this.setState({
-        leaders: sortByRecent(leaders)
-      });
-  }
-
-  handleSortAlltime() {
-      this.setState({
-        leaders: sortByAlltime(leaders)
-      });
-  }
-
+  // default browser implementation of sort appears not to be stable,
+  // so equal values will flip flop
   sortByRecent(leadersArray) {
       return leadersArray.sort((a,b) => {
-          return parseInt(a.recent) - parseInt(b.recent);
+          return parseInt(b.recent) - parseInt(a.recent);
       });
   }
 
   sortByAlltime(leadersArray) {
       return leadersArray.sort((a,b) => {
-          return parseInt(a.alltime) - parseInt(b.alltime);
+          return parseInt(b.alltime) - parseInt(a.alltime);
       });
   }
+
+  handleSortRecent() {
+      this.setState({
+        leaders: this.sortByRecent(this.state.leaders)
+      });
+  }
+
+  handleSortAlltime() {
+      this.setState({
+        leaders: this.sortByAlltime(this.state.leaders)
+      });
+  }  
 
   render() {
     if(!this.state) {
@@ -66,14 +68,34 @@ class LeaderboardContainer extends React.Component {
         )
     }
     return (
-        <Leaderboard leaders={this.state.leaders}/>
+        <div>
+            <button onClick={this.handleSortAlltime}>Sort Alltime</button>
+            <button onClick={this.handleSortRecent}>Sort Recent</button>
+            <Leaderboard leaders={this.state.leaders}/>
+        </div>        
     );
   }
 }
 
 function Leaderboard(props) {
+    const leaderElements = [];
+    props.leaders.forEach(l => {
+        leaderElements.push(
+            <Leader key={l.username} data={l}/>
+        )
+    });
     return (
-        <div>{JSON.stringify(props)}</div>
+        <div>
+            {leaderElements}
+        </div>
+    )
+}
+
+function Leader(props) {
+    return (
+        <div>
+            {props.data.username}
+        </div>
     )
 }
 
