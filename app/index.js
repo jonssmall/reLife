@@ -1,30 +1,36 @@
 var React = require("react");
 var ReactDom = require("react-dom");
 
+const boardParams = {
+  width: 70,
+  height: 50,
+  generation: 0
+};
+
 class GameContainer extends React.Component {
   constructor(props) {
     super(props);
-  }  
+    this.state({
+      width: props.width,
+      height: props.height,
+      generation: props.generation
+    });
+  };
 
   componentDidMount() {
-    
-  }
+
+  };
 
   render() {
-    // if(!this.state) {
-    //     return (
-    //         <div>Loading...</div>
-    //     )
-    // }
     return (
-        <div>            
-            Hello, Life.
-        </div>        
+      <div>
+        Hello, Life.
+      </div>
     );
-  }
+  };
 }
 
 ReactDom.render(
-    <GameContainer />,
-    document.getElementById("app")
+  <GameContainer {...boardParams} />,
+  document.getElementById("app")
 );
