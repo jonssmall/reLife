@@ -1,124 +1,30 @@
 var React = require("react");
 var ReactDom = require("react-dom");
 
-class LeaderboardContainer extends React.Component {
+class GameContainer extends React.Component {
   constructor(props) {
-    super(props);    
-    this.handleSortRecent = this.handleSortRecent.bind(this);
-    this.handleSortAlltime = this.handleSortAlltime.bind(this);    
+    super(props);
   }  
 
   componentDidMount() {
-    axios.get('https://fcctop100.herokuapp.com/api/fccusers/top/recent')
-    .then(response => {        
-        this.setState({leaders: response.data});
-    })
-    .catch(error => {
-        console.log(error);
-    });
+    
   }
-
-  // default browser implementation of sort appears not to be stable,
-  // so equal values will flip flop
-  sortByRecent(leadersArray) {
-      return leadersArray.sort((a,b) => {
-          return parseInt(b.recent) - parseInt(a.recent);
-      });
-  }
-
-  sortByAlltime(leadersArray) {
-      return leadersArray.sort((a,b) => {
-          return parseInt(b.alltime) - parseInt(a.alltime);
-      });
-  }
-
-  handleSortRecent() {
-      this.setState({
-        leaders: this.sortByRecent(this.state.leaders)
-      });
-  }
-
-  handleSortAlltime() {
-      this.setState({
-        leaders: this.sortByAlltime(this.state.leaders)
-      });
-  }  
 
   render() {
-    if(!this.state) {
-        return (
-            <div>Loading...</div>
-        )
-    }
+    // if(!this.state) {
+    //     return (
+    //         <div>Loading...</div>
+    //     )
+    // }
     return (
         <div>            
-            <Leaderboard recentHandler={this.handleSortRecent} alltimeHandler={this.handleSortAlltime} leaders={this.state.leaders}/>
+            Hello, Life.
         </div>        
     );
   }
 }
 
-const sortStyle = {
-    sort: {
-        cursor: "pointer",
-        color: "blue",
-        textDecoration: "underline"
-    },
-    sortHover: {
-        textDecoration: "none",
-        textShadow: "1px 1px 1px #555"
-    }
-};
-
-function Leaderboard(props) {
-    const leaderElements = [];
-    let rank = 0;
-    props.leaders.forEach(l => {
-        rank++
-        leaderElements.push(
-            <Leader rank={rank} key={rank} data={l}/>
-        )
-    });
-    return (       
-        <div className="pure-g">
-            <div className="pure-u-1-3"></div>
-            <div className="pure-u-1-3">
-                <h1>freeCodeCamp Leaderboard</h1>
-                <table className="pure-table">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>User</th>
-                            <th>
-                                <span onClick={props.recentHandler} style={sortStyle.sort}>Recent</span>
-                            </th>
-                            <th>
-                                <span onClick={props.alltimeHandler} style={sortStyle.sort}>Alltime</span>                        
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {leaderElements}
-                    </tbody>
-                </table>
-            </div>
-            <div className="pure-u-1-3"></div>
-        </div>         
-    )
-}
-
-function Leader(props) {
-    return (        
-        <tr className={props.rank % 2 == 0 ? "pure-table-odd": ""}>
-            <td>{props.rank}</td>
-            <td><a target="_blank" href={`https://www.freecodecamp.com/${props.data.username}`}>{props.data.username}</a></td>
-            <td>{props.data.recent}</td>
-            <td>{props.data.alltime}</td>
-        </tr>
-    )
-}
-
 ReactDom.render(
-    <LeaderboardContainer />,
+    <GameContainer />,
     document.getElementById("app")
 );
