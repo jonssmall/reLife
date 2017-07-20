@@ -25,7 +25,7 @@ class GameContainer extends React.Component {
     const board = [];
     //cool new ES6 iteration. The underscore means undefined.
     [...Array(this.state.height)].map((_, i) => board.push(this.buildRow()));
-    this.setState({board});
+    this.setState({board, generation: 0});
   };
 
   buildRow() {
@@ -134,8 +134,7 @@ class GameContainer extends React.Component {
   };
 
   componentDidMount() {
-    this.buildBoard();
-    this.intervalId = setInterval(this.nextBoard.bind(this), this.state.delay);
+    this.startLife();
   };
   componentWillUnmount(){
     clearInterval(this.intervalId);
@@ -154,13 +153,20 @@ class GameContainer extends React.Component {
       clearedBoard.push(newRow);
     });    
     this.setState({board: clearedBoard, generation: 0});
-    clearInterval(this.intervalId);    
+    clearInterval(this.intervalId);
+    //todo: clearBoard & nextBoard can be DRYed out
+  }
+
+  startLife() {
+    if (this.intervalId) clearInterval(this.intervalId);
+    this.buildBoard();
+    this.intervalId = setInterval(this.nextBoard.bind(this), this.state.delay);
   }
 
   render() {    
     return (
       <div>
-        <button >Restart</button>
+        <button onClick={this.startLife.bind(this)}>Restart</button>
         <button onClick={this.clearCells.bind(this)}>Clear</button>
         <button>Pause</button>
         <button>Play</button>
