@@ -158,9 +158,18 @@ class GameContainer extends React.Component {
   }
 
   startLife() {
-    if (this.intervalId) clearInterval(this.intervalId);
+    clearInterval(this.intervalId);
     this.buildBoard();
     this.intervalId = setInterval(this.nextBoard.bind(this), this.state.delay);
+  }
+
+  pause() {
+    clearInterval(this.intervalId);
+  }
+
+  resume() {
+    clearInterval(this.intervalId);
+    this.intervalId = setInterval(this.nextBoard.bind(this), this.state.delay);    
   }
 
   render() {    
@@ -168,8 +177,8 @@ class GameContainer extends React.Component {
       <div>
         <button onClick={this.startLife.bind(this)}>Restart</button>
         <button onClick={this.clearCells.bind(this)}>Clear</button>
-        <button>Pause</button>
-        <button>Play</button>
+        <button onClick={this.pause.bind(this)}>Pause</button>
+        <button onClick={this.resume.bind(this)}>Play</button>
         Generation: {this.state.generation}
         {/*<button onClick={this.nextBoard}>Test Board</button>*/}
         <Board board={this.state.board} />
