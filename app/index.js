@@ -141,10 +141,30 @@ class GameContainer extends React.Component {
     clearInterval(this.intervalId);
   }
 
+  clearCells() {
+    const board = this.state.board;    
+    const clearedBoard = [];
+    board.map((r, rIndex) => {
+      const newRow = [];
+      r.map((c, cIndex) => {
+        newRow.push({
+          alive: false
+        });
+      });
+      clearedBoard.push(newRow);
+    });    
+    this.setState({board: clearedBoard, generation: 0});
+    clearInterval(this.intervalId);    
+  }
+
   render() {    
     return (
       <div>
-        Hello, Life.
+        <button >Restart</button>
+        <button onClick={this.clearCells.bind(this)}>Clear</button>
+        <button>Pause</button>
+        <button>Play</button>
+        Generation: {this.state.generation}
         {/*<button onClick={this.nextBoard}>Test Board</button>*/}
         <Board board={this.state.board} />
       </div>
