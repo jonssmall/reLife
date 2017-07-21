@@ -172,6 +172,13 @@ class GameContainer extends React.Component {
     this.intervalId = setInterval(this.nextBoard.bind(this), this.state.delay);    
   }
 
+  flipCell(rowIndex, cellIndex) {
+    const board = this.state.board;
+    const cell = board[rowIndex][cellIndex];
+    cell.alive = !cell.alive;
+    this.setState({board});
+  }
+
   render() {    
     return (
       <div>
@@ -179,9 +186,10 @@ class GameContainer extends React.Component {
         <button onClick={this.clearCells.bind(this)}>Clear</button>
         <button onClick={this.pause.bind(this)}>Pause</button>
         <button onClick={this.resume.bind(this)}>Play</button>
-        Generation: {this.state.generation}
-        {/*<button onClick={this.nextBoard}>Test Board</button>*/}
-        <Board board={this.state.board} />
+        Generation: {this.state.generation}        
+        <Board board={this.state.board} cellHandler={this.flipCell.bind(this)} />
+        <br/>
+        Hint: Click a cell.
       </div>
     );
   };
@@ -191,7 +199,7 @@ class GameContainer extends React.Component {
 function Board(props) {
   const rows = [];
   props.board.map((r,i) => {
-    rows.push(<Row key={i} row={r} />)
+    rows.push(<Row key={i} row={r} rowIndex={i} cellClick={props.cellHandler}/>)
   })
   return (
     <div className="board">
@@ -207,14 +215,13 @@ function Row(props) {
   const cells = [];
   props.row.map((c,i) => {        
     const cellStyle = {
-      border: "1px solid black",
-      //borderRight: "1px solid black", 
+      border: "1px solid black",      
       display: "inline-block",
       height: "10px",
       width: "10px",
       backgroundColor: c.alive ? "#175118" : "gray"
     };
-    cells.push(<div key={i} style={cellStyle} className={c.alive} ></div>)
+    cells.push(<div key={i} style={cellStyle} className={c.alive} onClick={props.cellClick.bind(null, props.rowIndex,i)}></div>)
   });
   return (
     <div className="row" style={rowStyle} >
