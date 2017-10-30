@@ -1,10 +1,11 @@
 "use strict";
 import React from "react";
 import Board from "../components/board";
+import helper from "./boardHelper";
 
 /*
   The GameContainer is responsible for resolving the underlying state of the game board
-  and passing that state to the Board react component to display in the view.
+  and passing that state to the Board react component which in turn displays state in the view.
 */
 class GameContainer extends React.Component {
   constructor(props) {
@@ -47,77 +48,14 @@ class GameContainer extends React.Component {
   // Alive, 2-3 neighbors - alive
   // Alive, more than 3 neighbors - dead
   // Dead, exactly 3 neighbors - alive
-  nextState(cellObj, row, cell) {
-    const neighbors = this.getNeighbors(row, cell);    
+  nextState(cellObj, row, cell) {        
+    const neighbors = helper(this.state).getNeighbors(row, cell);
     let liveCount = 0;
     for (const key of Object.keys(neighbors)) {      
       if (neighbors[key].alive) liveCount++;
     }        
     return cellObj.alive ? (liveCount > 1 && liveCount < 4) : liveCount == 3;    
-  }
-
-  // for given coords get the 8 adjacent neighbors,
-  // including other side of board
-  getNeighbors(row, cell) {        
-    return {
-      left: this.getLeft(row, cell),
-      upperLeft: this.getUpperLeft(row, cell),
-      upper: this.getUpper(row, cell),
-      upperRight: this.getUpperRight(row, cell),
-      right: this.getRight(row, cell),
-      lowerRight: this.getLowerRight(row, cell),
-      lower: this.getLower(row, cell),
-      lowerLeft: this.getLowerLeft(row, cell)
-    }
-  };
-
-  getLeft(row, cell) {
-    return cell == 0 ? this.state.board[row][this.state.width - 1] : this.state.board[row][cell - 1];
-  };
-
-  getUpperLeft(row, cell) {
-    if(row == 0) {
-      return cell == 0 ? this.state.board[this.state.height - 1][this.state.width - 1] : this.state.board[this.state.height - 1][cell - 1];
-    } else {
-      return cell == 0 ? this.state.board[row - 1][this.state.width - 1] : this.state.board[row - 1][cell - 1];
-    }
-  };
-
-  getUpper(row, cell) {
-    return row == 0 ? this.state.board[this.state.height - 1][cell] : this.state.board[row - 1][cell];
-  };
-
-  getUpperRight(row, cell) {
-    if(row == 0) {
-      return cell == this.state.width - 1 ? this.state.board[this.state.height - 1][0] : this.state.board[this.state.height - 1][cell + 1];
-    } else {
-      return cell == this.state.width - 1 ? this.state.board[row - 1][0] : this.state.board[row - 1][cell + 1];
-    }
-  };
-
-  getRight(row, cell) {
-    return cell == this.state.width - 1 ? this.state.board[row][0] : this.state.board[row][cell + 1];
-  };
-
-  getLowerRight(row, cell) {
-    if(row == this.state.height - 1) {
-      return cell == this.state.width - 1 ? this.state.board[0][0] : this.state.board[this.state.height - 1][cell + 1];
-    } else {
-      return cell == this.state.width - 1 ? this.state.board[row + 1][0] : this.state.board[row + 1][cell + 1];
-    }
-  };
-
-  getLower(row, cell) {
-    return row == this.state.height - 1 ? this.state.board[0][cell] : this.state.board[row + 1][cell];
-  };
-
-  getLowerLeft(row, cell) {
-    if(row == this.state.height - 1) {
-      return cell == 0 ? this.state.board[0][this.state.width - 1] : this.state.board[0][cell - 1];
-    } else {
-      return cell == 0 ? this.state.board[row + 1][this.state.width - 1] : this.state.board[row + 1][cell - 1];
-    }
-  };
+  }  
 
   componentDidMount() {
     this.startLife();
@@ -126,21 +64,17 @@ class GameContainer extends React.Component {
     clearInterval(this.intervalId);
   }
 
-  clearCells() {
-    const board = this.state.board;    
-    const clearedBoard = [];
-    board.map((r, rIndex) => {
-      const newRow = [];
-      r.map((c, cIndex) => {
-        newRow.push({
+  clearCells() {    
+    const clearedBoard = this.state.board.map((r, rIndex) => {      
+      return r.map((c, cIndex) => {
+        return {
           alive: false
-        });
-      });
-      clearedBoard.push(newRow);
+        };
+      });;
     });    
     this.setState({board: clearedBoard, generation: 0});
     clearInterval(this.intervalId);
-    //todo: clearBoard & nextBoard can be DRYed out
+    //todo: clearCells & nextBoard can be DRYed out
   }
 
   startLife() {
