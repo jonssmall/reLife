@@ -23,8 +23,13 @@ class GameContainer extends React.Component {
 
   buildBoard() {
     const board = [];
+
+    for (let i = 0; i < this.state.height; i++) {
+      board.push(this.buildRow());
+    }
+
     //cool new ES6 iteration. The underscore means undefined.
-    [...Array(this.state.height)].map((_, i) => board.push(this.buildRow()));
+    //[...Array(this.state.height)].map((_, i) => board.push(this.buildRow()));
     this.setState({board, generation: 0});
   };
 
